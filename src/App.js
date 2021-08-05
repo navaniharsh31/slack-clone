@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import Chat from "./components/Chat";
+import Login from "./components/Login";
+import { auth } from "./firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 function App() {
+  const [loggedIn, loading] = useAuthState(auth);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!loggedIn ? (
+        <Login />
+      ) : (
+        <div className="flex flex-col h-screen">
+          <Header />
+          <div className="flex-1 overflow-y-auto flex">
+            <Sidebar />
+            <Chat />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
